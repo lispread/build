@@ -36,9 +36,6 @@ DIST_DIR	:= $(PRJDIR)/output/images
 BOOT_DIST_BIN	:= $(DIST_DIR)/$(BOOT)-pubkey.bin
 KERNEL_DIST_BIN	:= $(DIST_DIR)/$(KERNEL)-signed-ota.bin
 
-export ZEPHYR_TOOLCHAIN_VARIANT	:= zephyr
-export ZEPHYR_SDK_INSTALL_DIR	:= $(sdk_DIR)
-
 IMGTOOL = $(boot_DIR)/scripts/imgtool.py
 
 # Macros
@@ -46,7 +43,7 @@ IMGTOOL = $(boot_DIR)/scripts/imgtool.py
 # MESSAGE Macro -- display a message in bold type
 MESSAGE = echo "\n$(TERM_BOLD)>>> $(1)$(TERM_RESET)"
 TERM_BOLD := $(shell tput smso 2>/dev/null)
-TERM_RESET := $(shell tput rmso 2>/dev/null)
+TERM_RESET := ${shell tput rmso 2>/dev/null}
 
 # Macro of Building Targets
 # $(1): Target
@@ -56,7 +53,7 @@ define MAKE_TARGET
 $(1): 
 	@ $(call MESSAGE,"Building $(1)")
 	@ if [ ! -d $($(1)_BUILD_DIR) ]; then mkdir -p $($(1)_BUILD_DIR); fi
-	(source $(kernel_DIR)/zephyr-env.sh && cd $($(1)_BUILD_DIR) && \
+	(. ~/.zephyrrc && cd $($(1)_BUILD_DIR) && \
 	if [ ! -f Makefile ] ; then cmake -DBOARD=$(BOARD) -DCONF_FILE=prj$(findstring _debug,$(1)).conf $(2); fi && \
 	make \
 	)
