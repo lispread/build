@@ -13,8 +13,7 @@ OS		:= $(KERNEL)
 
 CROSS_COMPILE   := $(ARCH)-$(OS)-$(ABI)-
 
-REPEATER	:= repeater
-MP_TEST		:= mp_test
+PROFILE		?= repeater
 
 # Directories and Files
 ################################################################
@@ -23,22 +22,23 @@ PWD		:= $(shell pwd)
 PRJDIR		:= $(PWD)
 
 app_DIR		:= $(PRJDIR)/apps
+profile_DIR	:= $(app_DIR)/$(PROFILE)
 boot_DIR	:= $(PRJDIR)/$(BOOT)
 kernel_DIR	:= $(PRJDIR)/$(KERNEL)
+dloader_DIR	:= $(PRJDIR)/dloader
 
 BUILD_DIR		:= $(PRJDIR)/output
 boot_BUILD_DIR		:= $(BUILD_DIR)/$(BOOT)
-repeater_BUILD_DIR	:= $(BUILD_DIR)/$(REPEATER)
-mp_test_BUILD_DIR	:= $(BUILD_DIR)/$(MP_TEST)
+kernel_BUILD_DIR	:= $(BUILD_DIR)/$(PROFILE)
 
 BOOT_BIN	:= $(boot_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
-REPEATER_BIN	:= $(repeater_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
-MP_TEST_BIN	:= $(mp_test_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
+KERNEL_BIN	:= $(kernel_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
+DLOADER_BIN	:= $(dloader_DIR)/dloader
 
-DIST_DIR	:= $(PRJDIR)/output/images
+DIST_DIR	:= $(kernel_BUILD_DIR)/images
 BOOT_DIST_BIN	:= $(DIST_DIR)/$(BOOT)-pubkey.bin
-REPEATER_DIST_BIN	:= $(DIST_DIR)/$(REPEATER)-signed-ota.bin
-MP_TEST_DIST_BIN	:= $(DIST_DIR)/$(MP_TEST)-signed-ota.bin
+KERNEL_DIST_BIN	:= $(DIST_DIR)/$(KERNEL)-signed-ota.bin
+DLOADER_DIST_BIN:= $(BUILD_DIR)/dloader/dloader
 
 IMGTOOL = $(boot_DIR)/scripts/imgtool.py
 
@@ -93,8 +93,8 @@ endef
 
 # Targets
 ################################################################
-DEFAULT_TARGETS		:= boot repeater mp_test
-DIST_TARGETS		:= $(DEFAULT_TARGETS) 
+DEFAULT_TARGETS		:= boot kernel
+DIST_TARGETS		:= $(DEFAULT_TARGETS) dloader
 ALL_TARGETS		:= $(DEFAULT_TARGETS)
 CLEAN_TARGETS		:= $(addsuffix -clean,$(ALL_TARGETS))
 
@@ -129,31 +129,26 @@ endef
 dist: $(DIST_TARGETS)
 	@ if [ ! -d $(DIST_DIR) ]; then install -d $(DIST_DIR); fi
 	@ install $(BOOT_BIN) $(BOOT_DIST_BIN)
-	$(call SIGN_KERNEL_IMAGE,$(REPEATER_BIN),$(REPEATER_DIST_BIN))
-	$(call SIGN_KERNEL_IMAGE,$(MP_TEST_BIN),$(MP_TEST_DIST_BIN))
+	$(call SIGN_KERNEL_IMAGE,$(KERNEL_BIN),$(KERNEL_DIST_BIN))
 #	building u-boot temporarily
-	if [ ! -f $(DIST_DIR)/u-boot-pubkey-dtb.bin ]; then \
+	@ if [ ! -f $(DIST_DIR)/u-boot-pubkey-dtb.bin ]; then \
 	source $(kernel_DIR)/zephyr-env.sh && $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(uboot_DIR) distclean; \
 	sed -i 's/bootm 0x......../bootm $(KERNEL_BOOT_ADDR)/' $(uboot_DIR)/include/configs/uwp566x_evb.h; \
 	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(uboot_DIR) uwp566x_evb_defconfig; \
 	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(uboot_DIR); \
 	fi
 #	sign kernel for u-boot loading
-	@ mv $(REPEATER_BIN) $(REPEATER_BIN).orig
-	@ dd if=$(REPEATER_BIN).orig of=$(REPEATER_BIN) bs=4K skip=1
-	$(call SIGN_OS_IMAGE,none,$(KERNEL_LOAD_ADDR),$(KERNEL_ENTRY_ADDR),$(KEY_DIR),$(KEY_NAME),$(REPEATER_BIN))
+	@ mv $(KERNEL_BIN) $(KERNEL_BIN).orig
+	@ dd if=$(KERNEL_BIN).orig of=$(KERNEL_BIN) bs=4K skip=1
+	$(call SIGN_OS_IMAGE,none,$(KERNEL_LOAD_ADDR),$(KERNEL_ENTRY_ADDR),$(KEY_DIR),$(KEY_NAME),$(KERNEL_BIN))
 	source $(kernel_DIR)/zephyr-env.sh && $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(uboot_DIR) EXT_DTB=$(KEY_DTB)
-	@ mv $(REPEATER_BIN).orig $(REPEATER_BIN)
-	install $(ITB) $(REPEATER_DIST_BIN)
-#	sign kernel for u-boot loading
-	@ mv $(MP_TEST_BIN) $(MP_TEST_BIN).orig
-	@ dd if=$(MP_TEST_BIN).orig of=$(MP_TEST_BIN) bs=4K skip=1
-	$(call SIGN_OS_IMAGE,none,$(KERNEL_LOAD_ADDR),$(KERNEL_ENTRY_ADDR),$(KEY_DIR),$(KEY_NAME),$(MP_TEST_BIN))
-	source $(kernel_DIR)/zephyr-env.sh && $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(uboot_DIR) EXT_DTB=$(KEY_DTB)
-	@ mv $(MP_TEST_BIN).orig $(MP_TEST_BIN)
-	install $(ITB) $(MP_TEST_DIST_BIN)
-	install $(uboot_DIR)/u-boot.bin $(DIST_DIR)/u-boot-pubkey-dtb.bin;
-	install $(DIST_DIR)/u-boot-pubkey-dtb.bin $(DIST_DIR)/mcuboot-pubkey.bin;
+	@ mv $(KERNEL_BIN).orig $(KERNEL_BIN)
+	install $(ITB) $(DIST_DIR)/zephyr-signed-ota.bin
+	@ install $(uboot_DIR)/u-boot.bin $(DIST_DIR)/u-boot-pubkey-dtb.bin;
+	@ install $(DIST_DIR)/u-boot-pubkey-dtb.bin $(DIST_DIR)/mcuboot-pubkey.bin;
+	@ install -d $(BUILD_DIR)/dloader
+	@ install $(DLOADER_BIN) $(DLOADER_DIST_BIN)
+	@ cp $(dloader_DIR)/ini/* $(BUILD_DIR)/dloader
 
 .PHONY: clean
 clean: $(CLEAN_TARGETS)
@@ -168,9 +163,14 @@ distclean:
 # Build Targets
 $(eval $(call MAKE_TARGET,boot,$(boot_DIR)/boot/zephyr))
 
-$(eval $(call MAKE_TARGET,repeater,$(app_DIR)/repeater))
+$(eval $(call MAKE_TARGET,kernel,$(profile_DIR)))
 
-$(eval $(call MAKE_TARGET,mp_test,$(app_DIR)/mp_test))
+$(DLOADER_DIST_BIN):
+	@ $(call MESSAGE,"Building dloader")
+	$(MAKE) -C $(dloader_DIR)
+
+.PHONY: dloader
+dloader: $(DLOADER_DIST_BIN)
 
 # Clean Targets
 $(foreach target,$(ALL_TARGETS),$(eval $(call CLEAN_TARGET,$(target),clean)))
