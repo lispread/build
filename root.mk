@@ -26,6 +26,7 @@ profile_DIR	:= $(app_DIR)/$(PROFILE)
 boot_DIR	:= $(PRJDIR)/$(BOOT)
 kernel_DIR	:= $(PRJDIR)/$(KERNEL)
 dloader_DIR	:= $(PRJDIR)/dloader
+fw_DIR		:= $(PRJDIR)/firmware
 
 BUILD_DIR		:= $(PRJDIR)/output
 boot_BUILD_DIR		:= $(BUILD_DIR)/$(BOOT)
@@ -149,6 +150,8 @@ dist: $(DIST_TARGETS)
 	@ install -d $(BUILD_DIR)/dloader
 	@ install $(DLOADER_BIN) $(DLOADER_DIST_BIN)
 	@ cp $(dloader_DIR)/ini/* $(BUILD_DIR)/dloader
+	@ install -m 775 build/update_fw.sh $(DIST_DIR)
+	@ install $(fw_DIR)/unsc_marlin3_mcu_ZEPHYR.pac $(DIST_DIR)
 
 .PHONY: clean
 clean: $(CLEAN_TARGETS)
