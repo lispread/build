@@ -151,6 +151,7 @@ dist: $(DIST_TARGETS)
 	@ install $(DLOADER_BIN) $(DLOADER_DIST_BIN)
 	@ cp $(dloader_DIR)/ini/* $(BUILD_DIR)/dloader
 	@ install -m 775 build/update_fw.sh $(DIST_DIR)
+	@ install build/flash_patition.xml $(DIST_DIR)
 	@ install $(fw_DIR)/unsc_marlin3_mcu_ZEPHYR.pac $(DIST_DIR)
 
 .PHONY: clean
