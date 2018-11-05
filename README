@@ -1,0 +1,83 @@
+UNISOC Zephyr SDK
+=================
+The UNISOC Zephyr SDK is provided for convenience and ease of use.
+It provides everything you need for development of UNISOC hardware
+platform except the cross-compilation toolchain, including
+bootloader and Zephyr portings, top level customized applications
+and programming tools.
+
+In addition to cross-compilers, please refer to 'Getting Started Guide'.
+https://docs.zephyrproject.org/latest/getting_started/getting_started.html#getting-started-guide
+
+
+Building
+========
+The UNISOC Zephyr SDK supports building multiple profiles.
+All supported profiles are stored in the directory 'apps',
+and can be listed by the following command:
+
+  find apps/ -mindepth 1 -maxdepth 1 -type d ! -name ".*" -exec basename {} \;
+
+To build a specific profile, use the following the command:
+
+  PROFILE=repeater make
+
+Note that the default profile is repeater.
+
+After the compilation, the images can be found in the directory 'output/repeater/images/'.
+fdl.bin - Flash downloader
+mcuboot-pubkey.bin - Bootloader
+zephyr-signed-ota.bin - Kernel
+
+
+Updating Firmware
+=================
+To update firmware, please follow the procedure below:
+
+1. Switch bootstrap pin to ROM Code mode.
+  ┌──────────────┐
+  │ ┌─┐   ┌─┐┌─┐ │
+  │ │O│ O │O││O│ │
+  │ ├─┤┌─┐├─┤├─┤ │
+  │ │O││O││O││O│ │
+  │ └─┘├─┤└─┘└─┘ │
+  │  O │O│ O  O  │
+  │    └─┘       │
+  └──────────────┘
+
+2. Power on the board, and execute the following sequence of commands:
+
+  cd output/repeater/images
+  ./update_fw.sh
+
+3. Switch bootstrap pin to NOR Flash mode again and push the reset button.
+  ┌──────────────┐
+  │    ┌─┐┌─┐┌─┐ │
+  │  O │O││O││O│ │
+  │ ┌─┐├─┤├─┤├─┤ │
+  │ │O││O││O││O│ │
+  │ ├─┤└─┘└─┘└─┘ │
+  │ │O│ O  O  O  │
+  │ └─┘          │
+  └──────────────┘
+
+To update one image or several images, please refer to help of update_fw.sh.
+
+  ./update_fw.sh -h
+
+Debugging
+=========
+At present, debugging with the J-Link and GDB is the only choice.
+To set the debugging environment, please follow the procedure below:
+
+1. Download J-Link Software Pack through and install it.
+https://www.segger.com/downloads/jlink/JLink_Linux_V630b_x86_64.deb
+  sudo dpkg -i Downloads/JLink_Linux_V630b_x86_64.deb
+
+2. Put Unisoc_UWP566X.JLinkScript to /opt/SEGGER/JLink/Samples/JLink/Scripts.
+  cp Unisoc_UWP566X.JLinkScript /opt/SEGGER/JLink/Samples/JLink/Scripts
+
+3. Start the J-Link GDB server
+  JLinkGDBServer -device Cortex-M4 -endian little -if SWD -speed 8000 -jlinkscriptfile /opt/SEGGER/JLink/Samples/JLink/Scripts/Unisoc_UWP566X.JLinkScript
+
+4. Start the debug session using GDB client
