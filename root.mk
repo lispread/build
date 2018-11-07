@@ -95,7 +95,7 @@ endef
 # Targets
 ################################################################
 DEFAULT_TARGETS		:= boot kernel
-DIST_TARGETS		:= $(DEFAULT_TARGETS) dloader
+DIST_TARGETS		:= $(DEFAULT_TARGETS)
 ALL_TARGETS		:= $(DEFAULT_TARGETS)
 CLEAN_TARGETS		:= $(addsuffix -clean,$(ALL_TARGETS))
 

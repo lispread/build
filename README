@@ -34,6 +34,10 @@ Updating Firmware
 =================
 To update firmware, please follow the procedure below:
 
+0. Build the flash programming tool before updating.
+
+  make dloader
+
 1. Switch bootstrap pin to ROM Code mode.
   ┌──────────────┐
   │ ┌─┐   ┌─┐┌─┐ │
