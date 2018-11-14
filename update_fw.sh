@@ -10,9 +10,10 @@ BAUDRATE=115200
 PAC_FILE=unsc_marlin3_mcu_ZEPHYR.pac
 PARAMS="-dev ${DEV_NAME} -baud ${BAUDRATE} -pac ${PAC_FILE}"
 IMGS_DIR=`pwd`
-BOOT_IMG=mcuboot-pubkey.bin
-KERNEL_IMG=zephyr-signed-ota.bin
-MODEM_IMG=EXEC_KERNEL_IMAGE.bin
+FDL_IMG=fdl*
+BOOT_IMG=mcuboot-pubkey*
+KERNEL_IMG=zephyr-signed-ota*
+MODEM_IMG=wcn-modem*
 USERDATA_IMG=
 
 usage()
@@ -42,17 +43,17 @@ append_params()
 
 NO_ARGS=0
 if [ $# -eq $NO_ARGS ]; then
-	append_params BOOT KERNEL MODEM USERDATA
+	append_params FDL BOOT KERNEL MODEM USERDATA
 fi
 
 while getopts ":abkmuhd:" opt; do
 	case $opt in
 	d ) IMGS_DIR=$OPTARG;;
-	a ) append_params BOOT KERNEL MODEM USERDATA;;
-	b ) append_params BOOT;;
-	k ) append_params KERNEL;;
-	m ) append_params MODEM;;
-	u ) append_params USERDATA;;
+	a ) append_params FDL BOOT KERNEL MODEM USERDATA;;
+	b ) append_params FDL BOOT;;
+	k ) append_params FDL KERNEL;;
+	m ) append_params FDL MODEM;;
+	u ) append_params FDL USERDATA;;
 	h ) usage;return;;
 	* ) echo "Unimplemented option chosen.";; # DEFAULT
 	esac

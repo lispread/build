@@ -6,6 +6,7 @@
 ################################################################
 ARCH		:= arm
 ABI		:= eabi
+CHIP		?= uwp5661
 BOARD		?= 96b_ivy5661
 BOOT		:= mcuboot
 KERNEL		:= zephyr
@@ -34,11 +35,14 @@ kernel_BUILD_DIR	:= $(BUILD_DIR)/$(PROFILE)
 
 BOOT_BIN	:= $(boot_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 KERNEL_BIN	:= $(kernel_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
+FW_BIN		:= $(fw_DIR)/wcn-modem.bin
 DLOADER_BIN	:= $(dloader_DIR)/dloader
 
 DIST_DIR	:= $(kernel_BUILD_DIR)/images
-BOOT_DIST_BIN	:= $(DIST_DIR)/$(BOOT)-pubkey.bin
-KERNEL_DIST_BIN	:= $(DIST_DIR)/$(KERNEL)-signed-ota.bin
+FDL_DIST_BIN	:= $(DIST_DIR)/fdl-$(CHIP)-$(BOARD).bin
+BOOT_DIST_BIN	:= $(DIST_DIR)/$(BOOT)-pubkey-$(CHIP)-$(BOARD).bin
+KERNEL_DIST_BIN	:= $(DIST_DIR)/$(KERNEL)-signed-ota-$(CHIP)-$(BOARD).bin
+FW_DIST_BIN	:= $(DIST_DIR)/wcn-modem-$(CHIP)-$(BOARD).bin
 DLOADER_DIST_BIN:= $(BUILD_DIR)/dloader/dloader
 
 IMGTOOL = $(boot_DIR)/scripts/imgtool.py
@@ -106,8 +110,8 @@ dist: $(DIST_TARGETS)
 	$(call SIGN_KERNEL_IMAGE,$(KERNEL_BIN),$(KERNEL_DIST_BIN))
 	@ install build/flash_patition.xml $(DIST_DIR)
 	@ install -m 775 build/update_fw.sh $(DIST_DIR)
-	@ install $(fw_DIR)/fdl.bin $(DIST_DIR)
-	@ install $(fw_DIR)/EXEC_KERNEL_IMAGE.bin $(DIST_DIR)
+	@ install $(fw_DIR)/fdl.bin $(FDL_DIST_BIN)
+	@ install $(FW_BIN) $(FW_DIST_BIN)
 	@ install $(fw_DIR)/unsc_marlin3_mcu_ZEPHYR.pac $(DIST_DIR)
 
 .PHONY: clean
