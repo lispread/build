@@ -107,6 +107,7 @@ dist: $(DIST_TARGETS)
 	@ install build/flash_patition.xml $(DIST_DIR)
 	@ install -m 775 build/update_fw.sh $(DIST_DIR)
 	@ install $(fw_DIR)/fdl.bin $(DIST_DIR)
+	@ install $(fw_DIR)/EXEC_KERNEL_IMAGE.bin $(DIST_DIR)
 	@ install $(fw_DIR)/unsc_marlin3_mcu_ZEPHYR.pac $(DIST_DIR)
 
 .PHONY: clean

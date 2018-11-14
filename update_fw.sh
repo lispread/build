@@ -12,7 +12,7 @@ PARAMS="-dev ${DEV_NAME} -baud ${BAUDRATE} -pac ${PAC_FILE}"
 IMGS_DIR=`pwd`
 BOOT_IMG=mcuboot-pubkey.bin
 KERNEL_IMG=zephyr-signed-ota.bin
-MODEM_IMG=
+MODEM_IMG=EXEC_KERNEL_IMAGE.bin
 USERDATA_IMG=
 
 usage()
