@@ -112,7 +112,6 @@ dist: $(DIST_TARGETS)
 	@ install -m 775 build/update_fw.sh $(DIST_DIR)
 	@ install $(fw_DIR)/fdl.bin $(FDL_DIST_BIN)
 	@ install $(FW_BIN) $(FW_DIST_BIN)
-	@ install $(fw_DIR)/unsc_marlin3_mcu_ZEPHYR.pac $(DIST_DIR)
 
 .PHONY: clean
 clean: $(CLEAN_TARGETS)
@@ -134,7 +133,7 @@ $(DLOADER_DIST_BIN):
 	$(MAKE) -C $(dloader_DIR)
 	@ install -d $(BUILD_DIR)/dloader
 	@ install $(DLOADER_BIN) $(DLOADER_DIST_BIN)
-	@ cp $(dloader_DIR)/ini/* $(BUILD_DIR)/dloader
+	@ cp -r $(dloader_DIR)/ini $(BUILD_DIR)/dloader
 
 .PHONY: dloader
 dloader: $(DLOADER_DIST_BIN)

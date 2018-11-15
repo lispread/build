@@ -7,8 +7,7 @@
 DLOADER=`pwd`/../../dloader/dloader
 DEV_NAME=/dev/ttyUSB0
 BAUDRATE=115200
-PAC_FILE=unsc_marlin3_mcu_ZEPHYR.pac
-PARAMS="-dev ${DEV_NAME} -baud ${BAUDRATE} -pac ${PAC_FILE}"
+PARAMS="-dev ${DEV_NAME} -baud ${BAUDRATE}"
 IMGS_DIR=`pwd`
 FDL_IMG=fdl*
 BOOT_IMG=mcuboot-pubkey*
