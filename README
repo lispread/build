@@ -25,16 +25,23 @@ To build a specific profile, use the following the command:
 Note that the default profile is repeater.
 
 After the compilation, the images can be found in the directory 'output/repeater/images/'.
-fdl.bin - Flash downloader
-mcuboot-pubkey.bin - Bootloader
-zephyr-signed-ota.bin - Kernel
+fdl*.bin - Flash downloader
+mcuboot-pubkey*.bin - Bootloader
+zephyr-signed-ota*.bin - Kernel
+wcn-modem* - WCN Modem
 
 
 Updating Firmware
 =================
 To update firmware, please follow the procedure below:
 
-0. Build the flash programming tool before updating.
+0. Install the flash programming tool before updating.
+Download the .deb package and install it.
+https://github.com/unisoc/dloader/releases/download/unisoc-v0.3.1/dloader_0.3.1-1_amd64.deb
+
+  sudo dpkg -i dloader_0.1-1_amd64.deb
+
+In addition, you can build the flash programming tool.
 
   make dloader
 

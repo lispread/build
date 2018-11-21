@@ -43,7 +43,6 @@ FDL_DIST_BIN	:= $(DIST_DIR)/fdl-$(CHIP)-$(BOARD).bin
 BOOT_DIST_BIN	:= $(DIST_DIR)/$(BOOT)-pubkey-$(CHIP)-$(BOARD).bin
 KERNEL_DIST_BIN	:= $(DIST_DIR)/$(KERNEL)-signed-ota-$(CHIP)-$(BOARD).bin
 FW_DIST_BIN	:= $(DIST_DIR)/wcn-modem-$(CHIP)-$(BOARD).bin
-DLOADER_DIST_BIN:= $(BUILD_DIR)/dloader/dloader
 
 IMGTOOL = $(boot_DIR)/scripts/imgtool.py
 
@@ -128,15 +127,15 @@ $(eval $(call MAKE_TARGET,boot,$(boot_DIR)/boot/zephyr))
 
 $(eval $(call MAKE_TARGET,kernel,$(profile_DIR)))
 
-$(DLOADER_DIST_BIN):
+$(DLOADER_BIN):
 	@ $(call MESSAGE,"Building dloader")
-	$(MAKE) -C $(dloader_DIR)
-	@ install -d $(BUILD_DIR)/dloader
-	@ install $(DLOADER_BIN) $(DLOADER_DIST_BIN)
-	@ cp -r $(dloader_DIR)/ini $(BUILD_DIR)/dloader
+	(cd $(dloader_DIR) && \
+	 ./configure && \
+	 $(MAKE) && \
+	 sudo $(MAKE) install)
 
 .PHONY: dloader
-dloader: $(DLOADER_DIST_BIN)
+dloader: $(DLOADER_BIN)
 
 # Clean Targets
 $(foreach target,$(ALL_TARGETS),$(eval $(call CLEAN_TARGET,$(target),clean)))

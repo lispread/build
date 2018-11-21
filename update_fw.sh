@@ -4,7 +4,7 @@
 # Function: wrapper script for dloader.
 ###############################################################
 
-DLOADER=`pwd`/../../dloader/dloader
+DLOADER=dloader
 DEV_NAME=/dev/ttyUSB0
 BAUDRATE=115200
 PARAMS="-dev ${DEV_NAME} -baud ${BAUDRATE}"
