@@ -39,10 +39,10 @@ FW_BIN		:= $(fw_DIR)/wcn-modem.bin
 DLOADER_BIN	:= $(dloader_DIR)/dloader
 
 DIST_DIR	:= $(kernel_BUILD_DIR)/images
-FDL_DIST_BIN	:= $(DIST_DIR)/fdl-$(CHIP)-$(BOARD).bin
-BOOT_DIST_BIN	:= $(DIST_DIR)/$(BOOT)-pubkey-$(CHIP)-$(BOARD).bin
-KERNEL_DIST_BIN	:= $(DIST_DIR)/$(KERNEL)-signed-ota-$(CHIP)-$(BOARD).bin
-FW_DIST_BIN	:= $(DIST_DIR)/wcn-modem-$(CHIP)-$(BOARD).bin
+FDL_DIST_BIN	:= $(DIST_DIR)/fdl-$(BOARD).bin
+BOOT_DIST_BIN	:= $(DIST_DIR)/$(BOOT)-pubkey-$(BOARD).bin
+KERNEL_DIST_BIN	:= $(DIST_DIR)/$(KERNEL)-signed-ota-$(BOARD).bin
+FW_DIST_BIN	:= $(DIST_DIR)/wcn-modem-$(BOARD).bin
 
 IMGTOOL = $(boot_DIR)/scripts/imgtool.py
 

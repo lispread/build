@@ -18,13 +18,13 @@ USERDATA_IMG=
 usage()
 {
 	echo "Usage: `basename $0` [-d] path [-abhkmu]"
-	echo "−d: specify the path which contains images."
-	echo "−a: flash all images."
-	echo "−b: flash bootloader."
-	echo "−k: flash kernel."
-	echo "−m: flash modem."
-	echo "−u: flash userdata"
-	echo "−h: display help."
+	echo "-d: specify the path which contains images."
+	echo "-a: flash all images."
+	echo "-b: flash bootloader."
+	echo "-k: flash kernel."
+	echo "-m: flash modem."
+	echo "-u: flash userdata"
+	echo "-h: display help."
 	echo ""
 	exit 0
 }
