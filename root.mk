@@ -25,14 +25,17 @@ PRJDIR		:= $(PWD)
 app_DIR		:= $(PRJDIR)/apps
 profile_DIR	:= $(app_DIR)/$(PROFILE)
 boot_DIR	:= $(PRJDIR)/$(BOOT)
+fdl_DIR		:= $(PRJDIR)/fdl
 kernel_DIR	:= $(PRJDIR)/$(KERNEL)
 dloader_DIR	:= $(PRJDIR)/dloader
 fw_DIR		:= $(PRJDIR)/firmware
 
 BUILD_DIR		:= $(PRJDIR)/output
+fdl_BUILD_DIR		:= $(BUILD_DIR)/fdl
 boot_BUILD_DIR		:= $(BUILD_DIR)/$(BOOT)
 kernel_BUILD_DIR	:= $(BUILD_DIR)/$(PROFILE)
 
+FDL_BIN		:= $(fdl_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 BOOT_BIN	:= $(boot_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 KERNEL_BIN	:= $(kernel_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 FW_BIN		:= $(fw_DIR)/wcn-modem.bin
@@ -97,7 +100,7 @@ endef
 
 # Targets
 ################################################################
-DEFAULT_TARGETS		:= boot kernel
+DEFAULT_TARGETS		:= fdl boot kernel
 DIST_TARGETS		:= $(DEFAULT_TARGETS)
 ALL_TARGETS		:= $(DEFAULT_TARGETS)
 CLEAN_TARGETS		:= $(addsuffix -clean,$(ALL_TARGETS))
@@ -105,11 +108,12 @@ CLEAN_TARGETS		:= $(addsuffix -clean,$(ALL_TARGETS))
 .PHONY: dist
 dist: $(DIST_TARGETS)
 	@ if [ ! -d $(DIST_DIR) ]; then install -d $(DIST_DIR); fi
+	@ install $(fw_DIR)/fdl.bin $(FDL_DIST_BIN)
+#	@ install $(FDL_BIN) $(FDL_DIST_BIN)
 	@ install $(BOOT_BIN) $(BOOT_DIST_BIN)
 	$(call SIGN_KERNEL_IMAGE,$(KERNEL_BIN),$(KERNEL_DIST_BIN))
 	@ install build/flash_patition.xml $(DIST_DIR)
 	@ install -m 775 build/update_fw.sh $(DIST_DIR)
-	@ install $(fw_DIR)/fdl.bin $(FDL_DIST_BIN)
 	@ install $(FW_BIN) $(FW_DIST_BIN)
 
 .PHONY: clean
@@ -123,8 +127,8 @@ distclean:
 ################################################################
 
 # Build Targets
+$(eval $(call MAKE_TARGET,fdl,$(fdl_DIR)))
 $(eval $(call MAKE_TARGET,boot,$(boot_DIR)/boot/zephyr))
-
 $(eval $(call MAKE_TARGET,kernel,$(profile_DIR)))
 
 $(DLOADER_BIN):
