@@ -5,9 +5,8 @@
 ###############################################################
 
 DLOADER=dloader
-DEV_NAME=/dev/ttyUSB0
+DEV_NAME=ttyUSB0
 BAUDRATE=115200
-PARAMS="-dev ${DEV_NAME} -baud ${BAUDRATE}"
 IMGS_DIR=`pwd`
 FDL_IMG=fdl*
 BOOT_IMG=mcuboot-pubkey*
@@ -17,8 +16,9 @@ USERDATA_IMG=
 
 usage()
 {
-	echo "Usage: `basename $0` [-d] path [-abhkmu]"
-	echo "-d: specify the path which contains images."
+	echo "Usage: `basename $0` [-d] device [-i] path [-abhkmu]"
+	echo "-d: specify the device name of the serial port."
+	echo "-i: specify the path which contains images."
 	echo "-a: flash all images."
 	echo "-b: flash bootloader."
 	echo "-k: flash kernel."
@@ -35,7 +35,7 @@ append_params()
 		for PAR in $@; do
 			IMG_NAME=`eval echo '$'"${PAR}"_IMG""`
 			IMG_PATH=`find ${IMGS_DIR} -type f -iname $(eval echo ${IMG_NAME})`
-			[ -n "${IMG_PATH}" ] && PARAMS="${PARAMS} -${PAR} ${IMG_PATH}"
+			[ -n "${IMG_PATH}" ] && EXTRA_PARAMS="${EXTRA_PARAMS} -${PAR} ${IMG_PATH}"
 		done
 	fi
 }
@@ -45,9 +45,10 @@ if [ $# -eq $NO_ARGS ]; then
 	append_params FDL BOOT KERNEL MODEM USERDATA
 fi
 
-while getopts ":abkmuhd:" opt; do
+while getopts ":abkmuhd:i:" opt; do
 	case $opt in
-	d ) IMGS_DIR=$OPTARG;;
+	d ) DEV_NAME=$OPTARG;;
+	i ) IMGS_DIR=$OPTARG;;
 	a ) append_params FDL BOOT KERNEL MODEM USERDATA;;
 	b ) append_params FDL BOOT;;
 	k ) append_params FDL KERNEL;;
@@ -67,4 +68,5 @@ else
 	exit
 fi
 
+PARAMS="-dev /dev/${DEV_NAME} -baud ${BAUDRATE} ${EXTRA_PARAMS}"
 sudo ${DLOADER} ${PARAMS}
