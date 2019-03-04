@@ -82,7 +82,7 @@
 				<Type>CODE</Type>
 				<Block>
 					<Base>0x2000000</Base>
-					<Size>0x30000</Size>
+					<Size>0xE000</Size>
 				</Block>
 				<Flag>1</Flag>
 				<CheckFlag>0</CheckFlag>
@@ -93,8 +93,8 @@
 				<IDAlias>KERNEL</IDAlias>
 				<Type>CODE</Type>
 				<Block>
-					<Base>0x2040000</Base>
-					<Size>0x80000</Size>
+					<Base>0x02010000</Base>
+					<Size>0xC4000</Size>
 				</Block>
 				<Flag>1</Flag>
 				<CheckFlag>0</CheckFlag>
@@ -105,8 +105,8 @@
 				<IDAlias>MODEM</IDAlias>
 				<Type>CODE</Type>
 				<Block>
-					<Base>0x20C0000</Base>
-					<Size>0xc0000</Size>
+					<Base>0x020D4000</Base>
+					<Size>0xB4000</Size>
 				</Block>
 				<Flag>1</Flag>
 				<CheckFlag>0</CheckFlag>
@@ -117,8 +117,8 @@
 				<IDAlias>USERDATA</IDAlias>
 				<Type>CODE</Type>
 				<Block>
-					<Base>0x22C0000</Base>
-					<Size>0x140000</Size>
+					<Base>0x02300000</Base>
+					<Size>0x100000</Size>
 				</Block>
 				<Flag>1</Flag>
 				<CheckFlag>0</CheckFlag>
