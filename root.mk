@@ -108,8 +108,7 @@ CLEAN_TARGETS		:= $(addsuffix -clean,$(ALL_TARGETS))
 .PHONY: dist
 dist: $(DIST_TARGETS)
 	@ if [ ! -d $(DIST_DIR) ]; then install -d $(DIST_DIR); fi
-	@ install $(fw_DIR)/fdl.bin $(FDL_DIST_BIN)
-#	@ install $(FDL_BIN) $(FDL_DIST_BIN)
+	@ install $(FDL_BIN) $(FDL_DIST_BIN)
 	@ install $(BOOT_BIN) $(BOOT_DIST_BIN)
 	$(call SIGN_KERNEL_IMAGE,$(KERNEL_BIN),$(KERNEL_DIST_BIN))
 	@ install build/flash_patition.xml $(DIST_DIR)
