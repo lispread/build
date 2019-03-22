@@ -84,6 +84,7 @@ endef
 SIGNING_KEY	?= $(boot_DIR)/root-rsa-2048.pem
 BOOT_HEADER_LEN	:= 0x1000
 FLASH_ALIGNMENT	:= 8
+SLOT_SIZE	:= 0x100000
 
 # Macro of Signing KERNEL Image
 # $(1): input file
@@ -94,7 +95,7 @@ define SIGN_KERNEL_IMAGE
 		--header-size $(BOOT_HEADER_LEN) \
 		--align $(FLASH_ALIGNMENT) \
 		--version 1.2 \
-		--slot-size 0x60000 \
+		--slot-size $(SLOT_SIZE) \
 		$(1) $(2)
 endef
 
