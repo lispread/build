@@ -29,6 +29,7 @@ fdl_DIR		:= $(PRJDIR)/fdl
 kernel_DIR	:= $(PRJDIR)/$(KERNEL)
 dloader_DIR	:= $(PRJDIR)/dloader
 fw_DIR		:= $(PRJDIR)/firmware
+hwparam_DIR		:= $(PRJDIR)/utility/hwparam
 
 BUILD_DIR		:= $(PRJDIR)/output
 fdl_BUILD_DIR		:= $(BUILD_DIR)/fdl
@@ -102,7 +103,7 @@ endef
 # Targets
 ################################################################
 DEFAULT_TARGETS		:= fdl boot kernel
-DIST_TARGETS		:= $(DEFAULT_TARGETS)
+DIST_TARGETS		:= hwparam $(DEFAULT_TARGETS)
 ALL_TARGETS		:= $(DEFAULT_TARGETS)
 CLEAN_TARGETS		:= $(addsuffix -clean,$(ALL_TARGETS))
 
@@ -140,6 +141,14 @@ $(DLOADER_BIN):
 
 .PHONY: dloader
 dloader: $(DLOADER_BIN)
+
+.PHONY: hwparam
+hwparam: $(hwparam_DIR)/wifi_board_config.ini
+	@ $(call MESSAGE,"Building hwparam")
+	@ (cd $(hwparam_DIR) && \
+	$(MAKE) && \
+	./$@ && \
+	install -m 444 wifi_rf.h $(PRJDIR)/$(KERNEL)/drivers/wifi/uwp/wifi_rf.h)
 
 # Clean Targets
 $(foreach target,$(ALL_TARGETS),$(eval $(call CLEAN_TARGET,$(target),clean)))
