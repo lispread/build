@@ -50,6 +50,8 @@ FW_DIST_BIN	:= $(DIST_DIR)/wcn-modem-$(BOARD).bin
 
 IMGTOOL = $(boot_DIR)/scripts/imgtool.py
 
+export BOARD PRJDIR KERNEL
+
 # Macros
 ################################################################
 # MESSAGE Macro -- display a message in bold type
@@ -143,12 +145,10 @@ $(DLOADER_BIN):
 dloader: $(DLOADER_BIN)
 
 .PHONY: hwparam
-hwparam: $(hwparam_DIR)/wifi_board_config.ini
+hwparam: $(hwparam_DIR)/wifi_board_config*.ini
 	@ $(call MESSAGE,"Building hwparam")
 	@ (cd $(hwparam_DIR) && \
-	$(MAKE) && \
-	./$@ && \
-	install -m 444 wifi_rf.h $(PRJDIR)/$(KERNEL)/drivers/wifi/uwp/wifi_rf.h)
+	$(MAKE))
 
 # Clean Targets
 $(foreach target,$(ALL_TARGETS),$(eval $(call CLEAN_TARGET,$(target),clean)))
