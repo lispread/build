@@ -35,6 +35,7 @@ BUILD_DIR		:= $(PRJDIR)/output
 fdl_BUILD_DIR		:= $(BUILD_DIR)/fdl
 boot_BUILD_DIR		:= $(BUILD_DIR)/$(BOOT)
 kernel_BUILD_DIR	:= $(BUILD_DIR)/$(PROFILE)
+hwparam_BUILD_DIR	:= $(hwparam_DIR)
 
 FDL_BIN		:= $(fdl_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 BOOT_BIN	:= $(boot_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
@@ -104,8 +105,8 @@ endef
 
 # Targets
 ################################################################
-DEFAULT_TARGETS		:= fdl boot kernel
-DIST_TARGETS		:= hwparam $(DEFAULT_TARGETS)
+DEFAULT_TARGETS		:= fdl boot hwparam kernel
+DIST_TARGETS		:= $(DEFAULT_TARGETS)
 ALL_TARGETS		:= $(DEFAULT_TARGETS)
 CLEAN_TARGETS		:= $(addsuffix -clean,$(ALL_TARGETS))
 
