@@ -27,9 +27,8 @@ profile_DIR	:= $(app_DIR)/$(PROFILE)
 boot_DIR	:= $(PRJDIR)/$(BOOT)
 fdl_DIR		:= $(PRJDIR)/fdl
 kernel_DIR	:= $(PRJDIR)/$(KERNEL)
-dloader_DIR	:= $(PRJDIR)/dloader
 fw_DIR		:= $(PRJDIR)/firmware
-hwparam_DIR		:= $(PRJDIR)/utility/hwparam
+hwparam_DIR	:= $(PRJDIR)/utility/hwparam
 uwpflash_DIR	:= $(PRJDIR)/utility/uwpflash
 
 BUILD_DIR		:= $(PRJDIR)/output
@@ -43,7 +42,6 @@ FDL_BIN		:= $(fdl_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 BOOT_BIN	:= $(boot_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 KERNEL_BIN	:= $(kernel_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 FW_BIN		:= $(fw_DIR)/wcn-modem.bin
-DLOADER_BIN	:= $(dloader_DIR)/dloader
 UWPFLASH_BIN	:= $(uwpflash_DIR)/uwpflash
 
 DIST_DIR	:= $(kernel_BUILD_DIR)/images
@@ -137,16 +135,6 @@ distclean:
 $(eval $(call MAKE_TARGET,fdl,$(fdl_DIR)))
 $(eval $(call MAKE_TARGET,boot,$(boot_DIR)/boot/zephyr))
 $(eval $(call MAKE_TARGET,kernel,$(profile_DIR)))
-
-$(DLOADER_BIN):
-	@ $(call MESSAGE,"Building dloader")
-	(cd $(dloader_DIR) && \
-	 ./configure && \
-	 $(MAKE) && \
-	 sudo $(MAKE) install)
-
-.PHONY: dloader
-dloader: $(DLOADER_BIN)
 
 .PHONY: hwparam
 hwparam: $(hwparam_DIR)/wifi_board_config*.ini
