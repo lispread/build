@@ -30,18 +30,19 @@ kernel_DIR	:= $(PRJDIR)/$(KERNEL)
 dloader_DIR	:= $(PRJDIR)/dloader
 fw_DIR		:= $(PRJDIR)/firmware
 hwparam_DIR		:= $(PRJDIR)/utility/hwparam
+uwpflash_DIR	:= $(PRJDIR)/utility/uwpflash
 
 BUILD_DIR		:= $(PRJDIR)/output
 fdl_BUILD_DIR		:= $(BUILD_DIR)/fdl
 boot_BUILD_DIR		:= $(BUILD_DIR)/$(BOOT)
 kernel_BUILD_DIR	:= $(BUILD_DIR)/$(PROFILE)
-hwparam_BUILD_DIR	:= $(hwparam_DIR)
 
 FDL_BIN		:= $(fdl_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 BOOT_BIN	:= $(boot_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 KERNEL_BIN	:= $(kernel_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 FW_BIN		:= $(fw_DIR)/wcn-modem.bin
 DLOADER_BIN	:= $(dloader_DIR)/dloader
+UWPFLASH_BIN	:= $(uwpflash_DIR)/uwpflash
 
 DIST_DIR	:= $(kernel_BUILD_DIR)/images
 FDL_DIST_BIN	:= $(DIST_DIR)/fdl-$(BOARD).bin
@@ -105,7 +106,7 @@ endef
 
 # Targets
 ################################################################
-DEFAULT_TARGETS		:= fdl boot hwparam kernel
+DEFAULT_TARGETS		:= fdl boot hwparam uwpflash kernel
 DIST_TARGETS		:= $(DEFAULT_TARGETS)
 ALL_TARGETS		:= $(DEFAULT_TARGETS)
 CLEAN_TARGETS		:= $(addsuffix -clean,$(ALL_TARGETS))
@@ -150,6 +151,14 @@ hwparam: $(hwparam_DIR)/wifi_board_config*.ini
 	@ $(call MESSAGE,"Building hwparam")
 	@ (cd $(hwparam_DIR) && \
 	$(MAKE))
+
+$(UWPFLASH_BIN):
+	@ $(call MESSAGE,"Building uwpflash")
+	(cd $(uwpflash_DIR) && \
+	 $(MAKE))
+
+.PHONY: uwpflash
+uwpflash: $(UWPFLASH_BIN)
 
 # Clean Targets
 $(foreach target,$(ALL_TARGETS),$(eval $(call CLEAN_TARGET,$(target),clean)))
