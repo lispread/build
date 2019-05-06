@@ -113,12 +113,24 @@
 				<Description>WCN firmware image file</Description>
 			</File>
 			<File>
+				<ID>HWPARAM</ID>
+				<IDAlias>HWPARAM</IDAlias>
+				<Type>CODE</Type>
+				<Block>
+					<Base>0x02300000</Base>
+					<Size>0x2000</Size>
+				</Block>
+				<Flag>1</Flag>
+				<CheckFlag>0</CheckFlag>
+				<Description>Hardware parameters</Description>
+			</File>
+			<File>
 				<ID>USERDATA</ID>
 				<IDAlias>USERDATA</IDAlias>
 				<Type>CODE</Type>
 				<Block>
-					<Base>0x02300000</Base>
-					<Size>0x100000</Size>
+					<Base>0x02302000</Base>
+					<Size>0xFE000</Size>
 				</Block>
 				<Flag>1</Flag>
 				<CheckFlag>0</CheckFlag>
