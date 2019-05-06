@@ -43,12 +43,14 @@ BOOT_BIN	:= $(boot_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 KERNEL_BIN	:= $(kernel_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 FW_BIN		:= $(fw_DIR)/wcn-modem-$(BOARD).bin
 UWPFLASH_BIN	:= $(uwpflash_DIR)/uwpflash
+HWPARAM_BIN	:= $(hwparam_BUILD_DIR)/hwparam.bin
 
 DIST_DIR	:= $(kernel_BUILD_DIR)/images
 FDL_DIST_BIN	:= $(DIST_DIR)/fdl-$(BOARD).bin
 BOOT_DIST_BIN	:= $(DIST_DIR)/$(BOOT)-pubkey-$(BOARD).bin
 KERNEL_DIST_BIN	:= $(DIST_DIR)/$(KERNEL)-signed-ota-$(BOARD).bin
 FW_DIST_BIN	:= $(DIST_DIR)/wcn-modem-$(BOARD).bin
+HWPARAM_DIST_BIN	:= $(DIST_DIR)/hwparam-$(BOARD).bin
 
 IMGTOOL = $(boot_DIR)/scripts/imgtool.py
 
@@ -120,6 +122,7 @@ dist: $(DIST_TARGETS)
 	@ install build/flash_patition.xml $(DIST_DIR)
 	@ install -m 775 build/update_fw.sh $(DIST_DIR)
 	@ install $(FW_BIN) $(FW_DIST_BIN)
+	@ install $(HWPARAM_BIN) $(HWPARAM_DIST_BIN)
 
 .PHONY: clean
 clean: $(CLEAN_TARGETS)
