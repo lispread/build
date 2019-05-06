@@ -35,13 +35,13 @@ BUILD_DIR		:= $(PRJDIR)/output
 fdl_BUILD_DIR		:= $(BUILD_DIR)/fdl
 boot_BUILD_DIR		:= $(BUILD_DIR)/$(BOOT)
 kernel_BUILD_DIR	:= $(BUILD_DIR)/$(PROFILE)
-hwparam_BUILD_DIR      := $(hwparam_DIR)
-uwpflash_BUILD_DIR     := $(uwpflash_DIR)
+hwparam_BUILD_DIR	:= $(hwparam_DIR)
+uwpflash_BUILD_DIR	:= $(uwpflash_DIR)
 
 FDL_BIN		:= $(fdl_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 BOOT_BIN	:= $(boot_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
 KERNEL_BIN	:= $(kernel_BUILD_DIR)/$(KERNEL)/$(KERNEL).bin
-FW_BIN		:= $(fw_DIR)/wcn-modem.bin
+FW_BIN		:= $(fw_DIR)/wcn-modem-$(BOARD).bin
 UWPFLASH_BIN	:= $(uwpflash_DIR)/uwpflash
 
 DIST_DIR	:= $(kernel_BUILD_DIR)/images
